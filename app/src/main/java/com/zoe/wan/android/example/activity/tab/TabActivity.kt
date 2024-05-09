@@ -1,10 +1,11 @@
-package com.zoe.wan.android.example
+package com.zoe.wan.android.example.activity.tab
 
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.zoe.wan.android.example.BR
+import com.zoe.wan.android.example.R
 import com.zoe.wan.android.example.databinding.ActivityTabBinding
 import com.zoe.wan.android.example.fragment.home.FragHome
 import com.zoe.wan.android.example.fragment.hotkey.FragHotkey

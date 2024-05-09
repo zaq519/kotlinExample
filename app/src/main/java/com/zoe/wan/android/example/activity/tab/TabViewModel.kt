@@ -1,4 +1,4 @@
-package com.zoe.wan.android.example
+package com.zoe.wan.android.example.activity.tab
 
 import android.app.Application
 import androidx.databinding.ObservableField

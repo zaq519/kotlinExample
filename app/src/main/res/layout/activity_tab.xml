@@ -4,7 +4,7 @@
     <data>
         <variable
             name="tabVm"
-            type="com.zoe.wan.android.example.TabViewModel" />
+            type="com.zoe.wan.android.example.activity.tab.TabViewModel" />
     </data>
     <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
