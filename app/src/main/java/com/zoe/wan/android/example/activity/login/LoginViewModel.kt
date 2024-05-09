@@ -15,7 +15,7 @@ class LoginViewModel(application: Application): BaseViewModel(application) {
     val passwordTwiceInput = ObservableField<String>()
 
 
-    fun login() {
+    fun login(callback: (username: String) -> Unit) {
         val name = usernameInput.get()
         val pwd = passwordInput.get()
         if (name.isNullOrEmpty() || pwd.isNullOrEmpty()) {
@@ -23,7 +23,26 @@ class LoginViewModel(application: Application): BaseViewModel(application) {
             return
         }
         viewModelScope.launch {
-            Repository.login(name, pwd)
+            val data =  Repository.login(name, pwd)
+            if (data != null) {
+                callback.invoke(data.username ?: "")
+            }
+        }
+    }
+
+    fun register(callback: (username: String) -> Unit) {
+        val name = usernameInput.get()
+        val pwd = passwordInput.get()
+        val repwd = passwordTwiceInput.get()
+        if (name.isNullOrEmpty() || pwd.isNullOrEmpty() || repwd.isNullOrEmpty()) {
+            ToastUtils.showShort("输入不能为空")
+            return
+        }
+        viewModelScope.launch {
+            val data =  Repository.register(name, pwd, repwd)
+            if (data != null) {
+                callback.invoke(data.username ?: "")
+            }
         }
     }
 }
