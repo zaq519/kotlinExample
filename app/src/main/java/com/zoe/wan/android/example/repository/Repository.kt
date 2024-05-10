@@ -1,9 +1,11 @@
 package com.zoe.wan.android.example.repository
 
 import android.content.Context
+import android.content.Intent
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
+import com.zoe.wan.android.example.activity.login.LoginActivity
 import com.zoe.wan.android.example.repository.data.HomeBannerData
 import com.zoe.wan.android.example.repository.data.HomeListData
 import com.zoe.wan.android.example.repository.data.UserData
@@ -39,26 +41,17 @@ object Repository {
 
     suspend fun homeBanner():HomeBannerData? {
         val data: BaseResponse<HomeBannerData?>? = getDefault().homeBanner()
-
-        if (data?.getData() != null)
-            return data.getData()
-        return null
+        return responseCall(data)
     }
 
     suspend fun login(username: String, password: String): UserData? {
         val data: BaseResponse<UserData?>? = getDefault().login(username, password)
-
-        if (data?.getData() != null)
-            return data.getData()
-        return null
+        return responseCall(data)
     }
 
     suspend fun register(username: String, password: String, repassword: String): UserData? {
         val data: BaseResponse<UserData?>? = getDefault().login(username, password, repassword)
-
-        if (data?.getData() != null)
-            return data.getData()
-        return null
+        return responseCall(data)
     }
 
     /*
@@ -67,6 +60,12 @@ object Repository {
     * */
     suspend fun logout(): Boolean {
         val data = getDefault().logout()
+        return data?.getErrCode() == 0
+
+    }
+
+    suspend fun collect(id: String): Boolean   {
+        val data = getDefault().collect(id)
         return data?.getErrCode() == 0
 
     }
@@ -87,8 +86,16 @@ object Repository {
             return response.getData()
         } else if(response.getErrCode() == NEED_LOGIN_CODE) {
             mContext?.get()?.applicationContext?.let {
-                it.startActivity()
+                val intent = Intent(it, LoginActivity::class.java)
+                intent.putExtra(LoginActivity.Intent_Type_Name, LoginActivity.Intent_Type_Value)
+                it.startActivity(intent)
             }
+            return null
+        } else {
+            GlobalScope.launch (Dispatchers.Main){
+                ToastUtils.showShort(response.getErrMsg() ?: "请求异常")
+            }
+            return null
         }
     }
 }
