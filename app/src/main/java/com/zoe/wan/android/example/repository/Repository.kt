@@ -65,6 +65,12 @@ object Repository {
     * 1. code = 0 返回业务数据
     * 2. code = -1001 跳转到登录页
     * */
+    suspend fun logout(): Boolean {
+        val data = getDefault().logout()
+        return data?.getErrCode() == 0
+
+    }
+
     private fun getDefault(): ApiService {
         return RetrofitClient.getInstance().getDefault(ApiService::class.java)
     }
