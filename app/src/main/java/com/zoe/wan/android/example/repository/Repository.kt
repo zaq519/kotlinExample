@@ -40,6 +40,12 @@ object Repository {
         return null
     }
 
+    suspend fun logout(): Boolean {
+        val data = getDefault().logout()
+        return data?.getErrCode() == 0
+
+    }
+
     private fun getDefault(): ApiService {
         return RetrofitClient.getInstance().getDefault(ApiService::class.java)
     }
