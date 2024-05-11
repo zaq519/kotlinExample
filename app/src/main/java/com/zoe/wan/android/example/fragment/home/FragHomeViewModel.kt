@@ -2,6 +2,7 @@ package com.zoe.wan.android.example.fragment.home
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zoe.wan.android.example.repository.Repository
 import com.zoe.wan.android.example.repository.data.HomeBannerData
 import com.zoe.wan.android.example.repository.data.HomeListItemData
@@ -35,6 +36,24 @@ class FragHomeViewModel(application: Application): BaseViewModel(application) {
             val data = Repository.homeBanner()
             if (data != null) {
                 bannerData.postValue(data)
+            }
+        }
+    }
+
+    fun collect(id: String, callback:() -> Unit) {
+        viewModelScope.launch {
+           val success = Repository.collect(id)
+            if (success) {
+                callback.invoke()
+            }
+        }
+    }
+
+    fun cancelCollect(id: String, callback:() -> Unit) {
+        viewModelScope.launch {
+            val success = Repository.cancelCollect(id)
+            if (success) {
+                callback.invoke()
             }
         }
     }

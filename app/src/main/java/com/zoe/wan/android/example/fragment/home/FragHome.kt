@@ -32,5 +32,17 @@ class FragHome:BaseFragment<FragmentHomeBinding, FragHomeViewModel>() {
             adapter.setBannerData(data)
 
         }
+
+        //item 点击回调
+        adapter.registerItemListener(object: HomeListAdapter.ItemCollectListener {
+            override fun itemCollect(id: String, pos: Int, collect: Boolean) {
+                //调用收藏接口
+                viewModel?.collect(id) {
+                    //收藏成功，此方法回调，更改图标
+                    adapter.setCollect(true, pos)
+                }
+            }
+
+        })
     }
 }

@@ -2,6 +2,7 @@ package com.zoe.wan.android.example.common.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
@@ -24,6 +25,11 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var dataList: List<HomeListItemData> = mutableListOf()
     private var bannerData: HomeBannerData? = null
+
+    private var collectListener: ItemCollectListener? = null
+    interface ItemCollectListener {
+        fun itemCollect(id: String, pos: Int, collect: Boolean)
+    }
     companion object {
         //静态常量
         //banner类型
@@ -52,6 +58,17 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             bannerData = data
             notifyDataSetChanged()
         }
+    }
+
+    fun setCollect(collect: Boolean, pos: Int) {
+        if (dataList.isNotEmpty()) {
+            dataList.get(pos).collect = collect
+            notifyDataSetChanged()
+        }
+    }
+
+    fun registerItemListener(listerner: ItemCollectListener) {
+        this.collectListener = listerner
     }
 
 
@@ -125,6 +142,12 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 holder.itemBinding.itemHomeCollect.setBackgroundResource(R.drawable.img_collect)
             else
                 holder.itemBinding.itemHomeCollect.setBackgroundResource(R.drawable.img_collect_grey)
+
+            holder.itemBinding.itemHomeCollect.setOnClickListener {
+                if (collectListener != null) {
+                    collectListener?.itemCollect(("${item.id}"), position ,item.collect?:false)
+                }
+            }
         }
 
     }

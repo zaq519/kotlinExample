@@ -5,6 +5,7 @@ import com.zoe.wan.android.example.repository.data.HomeListData
 import com.zoe.wan.android.example.repository.data.UserData
 import com.zoe.wan.android.http.ApiAddress.Article_List
 import com.zoe.wan.android.http.ApiAddress.Collect
+import com.zoe.wan.android.http.ApiAddress.Collect_Cancel
 import com.zoe.wan.android.http.ApiAddress.Home_Banner
 import com.zoe.wan.android.http.ApiAddress.Login
 import com.zoe.wan.android.http.ApiAddress.Logout
@@ -50,6 +51,12 @@ interface ApiService {
     /*
     * 点击收藏文章列表
     * */
-    @GET("$Collect{id}/json")
+    @POST("$Collect{id}/json")
     suspend fun collect(@Path("id") id: String): BaseResponse<Any?>?
+
+    /*
+    * 点击取消收藏文章列表
+    * */
+    @POST("$Collect_Cancel{id}/json")
+    suspend fun cancelCollect(@Path("id") id: String): BaseResponse<Any?>?
 }

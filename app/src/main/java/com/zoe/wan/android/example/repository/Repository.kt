@@ -2,6 +2,7 @@ package com.zoe.wan.android.example.repository
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
@@ -60,14 +61,40 @@ object Repository {
     * */
     suspend fun logout(): Boolean {
         val data = getDefault().logout()
-        return data?.getErrCode() == 0
+        return responseNoDataCall(data)
 
     }
 
-    suspend fun collect(id: String): Boolean   {
+    /*
+    * 收藏
+    * */
+    suspend fun collect(id: String): Boolean  {
         val data = getDefault().collect(id)
-        return data?.getErrCode() == 0
+        return responseNoDataCall(data)
 
+    }
+
+    /*
+    * 取消收藏
+    * */
+    suspend fun cancelCollect(id: String): Boolean  {
+        val data = getDefault().cancelCollect(id)
+        return responseNoDataCall(data)
+    }
+
+
+    private fun showToast(msg: String?) {
+        GlobalScope.launch (Dispatchers.Main){
+            ToastUtils.showShort(msg ?: "请求异常")
+        }
+    }
+
+    private fun startToLogin() {
+        mContext?.get()?.let {
+            val intent = Intent(it, LoginActivity::class.java)
+            intent.putExtra(LoginActivity.Intent_Type_Name, LoginActivity.Intent_Type_Value)
+            it.startActivity(intent)
+        }
     }
 
     private fun getDefault(): ApiService {
@@ -77,25 +104,33 @@ object Repository {
 
     private fun <T> responseCall(response: BaseResponse<T?>?): T? {
         if (response == null) {
-            GlobalScope.launch (Dispatchers.Main){
-                ToastUtils.showShort("请求异常")
-            }
+            showToast("请求异常")
             return null
         }
         if (response.getErrCode() == SUCCESS_CODE) {
             return response.getData()
         } else if(response.getErrCode() == NEED_LOGIN_CODE) {
-            mContext?.get()?.applicationContext?.let {
-                val intent = Intent(it, LoginActivity::class.java)
-                intent.putExtra(LoginActivity.Intent_Type_Name, LoginActivity.Intent_Type_Value)
-                it.startActivity(intent)
-            }
+            startToLogin()
             return null
         } else {
-            GlobalScope.launch (Dispatchers.Main){
-                ToastUtils.showShort(response.getErrMsg() ?: "请求异常")
-            }
+            showToast(response.getErrMsg())
             return null
+        }
+    }
+
+    private fun responseNoDataCall(response: BaseResponse<Any?>?): Boolean {
+        if (response == null) {
+            showToast("请求异常")
+            return false
+        }
+        if (response.getErrCode() == SUCCESS_CODE) {
+            return true
+        } else if(response.getErrCode() == NEED_LOGIN_CODE) {
+            startToLogin()
+            return false
+        } else {
+            showToast(response.getErrMsg())
+            return false
         }
     }
 }
