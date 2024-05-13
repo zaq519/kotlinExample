@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.Utils
 import com.zoe.wan.android.example.activity.login.LoginActivity
 import com.zoe.wan.android.example.repository.data.HomeBannerData
 import com.zoe.wan.android.example.repository.data.HomeListData
+import com.zoe.wan.android.example.repository.data.HomeTopListData
 import com.zoe.wan.android.example.repository.data.UserData
 import com.zoe.wan.android.http.BaseResponse
 import com.zoe.wan.android.http.RetrofitClient
@@ -38,6 +39,11 @@ object Repository {
         if (data?.getData() != null)
             return data.getData()
         return null
+    }
+
+    suspend fun getHomeTopList(): HomeTopListData? {
+        val data: BaseResponse<HomeTopListData?>? = getDefault().topHomeList()
+        return responseCall(data)
     }
 
     suspend fun homeBanner():HomeBannerData? {
@@ -93,6 +99,7 @@ object Repository {
         mContext?.get()?.let {
             val intent = Intent(it, LoginActivity::class.java)
             intent.putExtra(LoginActivity.Intent_Type_Name, LoginActivity.Intent_Type_Value)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             it.startActivity(intent)
         }
     }

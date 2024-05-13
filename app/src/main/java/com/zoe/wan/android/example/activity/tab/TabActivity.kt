@@ -26,11 +26,6 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
         return BR.tabVm
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Repository.init(this)
-        super.onCreate(savedInstanceState)
-    }
-
     override fun initViewData() {
 
         //初始化viewPager2

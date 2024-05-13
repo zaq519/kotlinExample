@@ -9,6 +9,7 @@ class WanAPP: Application() {
     override fun onCreate() {
         super.onCreate()
         //初始化三方SDK
+        Repository.init(applicationContext)
         RetrofitClient.getInstance().setContext(applicationContext)
     }
 }

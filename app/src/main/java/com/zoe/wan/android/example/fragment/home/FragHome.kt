@@ -25,7 +25,8 @@ class FragHome:BaseFragment<FragmentHomeBinding, FragHomeViewModel>() {
         binding?.homeListView?.adapter = adapter
 
         viewModel?.list?.observe(viewLifecycleOwner) { list->
-            adapter.setData(list)
+            if (!list.isNullOrEmpty())
+                adapter.setData(list)
         }
 
         viewModel?.bannerData?.observe(viewLifecycleOwner) {data->
@@ -36,11 +37,20 @@ class FragHome:BaseFragment<FragmentHomeBinding, FragHomeViewModel>() {
         //item 点击回调
         adapter.registerItemListener(object: HomeListAdapter.ItemCollectListener {
             override fun itemCollect(id: String, pos: Int, collect: Boolean) {
-                //调用收藏接口
-                viewModel?.collect(id) {
-                    //收藏成功，此方法回调，更改图标
-                    adapter.setCollect(true, pos)
+                if(collect == true) {
+                    //取消收藏
+                    viewModel?.collect(id) {
+                        //取消成功，此方法回调，更改图标
+                        adapter.setCollect(false, pos)
+                    }
+                } else {
+                    //调用收藏接口
+                    viewModel?.collect(id) {
+                        //收藏成功，此方法回调，更改图标
+                        adapter.setCollect(true, pos)
+                    }
                 }
+
             }
 
         })

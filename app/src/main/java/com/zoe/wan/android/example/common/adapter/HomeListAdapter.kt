@@ -23,7 +23,7 @@ import com.zoe.wan.android.example.repository.data.HomeListItemData
 
 class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var dataList: List<HomeListItemData> = mutableListOf()
+    private var dataList: List<HomeListItemData?>? = mutableListOf()
     private var bannerData: HomeBannerData? = null
 
     private var collectListener: ItemCollectListener? = null
@@ -42,7 +42,7 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     * 设置列表数据
     *
     * */
-    fun setData(list: List<HomeListItemData>?) {
+    fun setData(list: List<HomeListItemData?>?) {
         if (list != null && list.isNotEmpty()) {
             dataList = list
             notifyDataSetChanged()
@@ -61,8 +61,8 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     fun setCollect(collect: Boolean, pos: Int) {
-        if (dataList.isNotEmpty()) {
-            dataList.get(pos).collect = collect
+        if (dataList?.isNotEmpty() == true) {
+            dataList?.get(pos)?.collect = collect
             notifyDataSetChanged()
         }
     }
@@ -103,7 +103,7 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return dataList.size
+        return dataList?.size ?: 0
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -136,16 +136,16 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
                 })
         } else if(holder is HomeListViewHolder) {
-            val item = dataList[position]
+            val item = dataList?.get(position)
             holder.itemBinding.item = item
-            if (item.collect == true)
+            if (item?.collect == true)
                 holder.itemBinding.itemHomeCollect.setBackgroundResource(R.drawable.img_collect)
             else
                 holder.itemBinding.itemHomeCollect.setBackgroundResource(R.drawable.img_collect_grey)
 
             holder.itemBinding.itemHomeCollect.setOnClickListener {
                 if (collectListener != null) {
-                    collectListener?.itemCollect(("${item.id}"), position ,item.collect?:false)
+                    collectListener?.itemCollect(("${item?.id}"), position ,item?.collect?:false)
                 }
             }
         }
