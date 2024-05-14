@@ -26,9 +26,11 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var dataList: List<HomeListItemData?>? = mutableListOf()
     private var bannerData: HomeBannerData? = null
 
-    private var collectListener: ItemCollectListener? = null
-    interface ItemCollectListener {
+    private var itemClickListener: HomeItemClickListener? = null
+    interface HomeItemClickListener {
         fun itemCollect(id: String, pos: Int, collect: Boolean)
+        fun itemClick(title: String?, link: String?)
+        fun bannerClick(title: String?, link: String?)
     }
     companion object {
         //静态常量
@@ -67,8 +69,8 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    fun registerItemListener(listerner: ItemCollectListener) {
-        this.collectListener = listerner
+    fun registerItemListener(listerner: HomeItemClickListener) {
+        this.itemClickListener = listerner
     }
 
 
@@ -131,6 +133,7 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
                 }).setOnBannerListener(object: OnBannerListener<HomeBannerDataItem?> {
                     override fun OnBannerClick(data: HomeBannerDataItem?, position: Int) {
+                        itemClickListener?.bannerClick(data?.title, data?.url)
                         ToastUtils.showShort("Banner点击")//com.blankj.utilcodex非常好用
                     }
 
@@ -144,9 +147,13 @@ class HomeListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 holder.itemBinding.itemHomeCollect.setBackgroundResource(R.drawable.img_collect_grey)
 
             holder.itemBinding.itemHomeCollect.setOnClickListener {
-                if (collectListener != null) {
-                    collectListener?.itemCollect(("${item?.id}"), position ,item?.collect?:false)
+                if (itemClickListener != null) {
+                    itemClickListener?.itemCollect(("${item?.id}"), position ,item?.collect?:false)
                 }
+            }
+
+            holder.itemBinding.root.setOnClickListener {
+                itemClickListener?.itemClick(item?.title, item?.link)
             }
         }
 

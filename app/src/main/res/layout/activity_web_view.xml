@@ -24,6 +24,8 @@
                 android:id="@+id/webTitle"
                 android:gravity="center"
                 android:textSize="@dimen/sp_15"
+                android:maxLines="1"
+                android:maxLength="18"
                 tools:text="标题"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

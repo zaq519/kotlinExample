@@ -26,6 +26,8 @@
         </activity>
 
         <activity android:name=".activity.login.LoginActivity"/>
+        <activity android:name=".activity.webview.WebActivity"/>
     </application>
+
 
 </manifest>

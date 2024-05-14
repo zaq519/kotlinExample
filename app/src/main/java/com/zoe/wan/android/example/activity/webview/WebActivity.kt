@@ -7,6 +7,12 @@ import com.zoe.wan.android.example.R
 
 
 class WebActivity: BaseActivity<ActivityWebViewBinding, WebViewModel>() {
+
+    companion object {
+        const val INTENT_WEB_TITLE_KEY = "INTENT_WEB_TITLE_KEY"
+        const val INTENT_WEB_URL_KEY = "INTENT_WEB_URL_KEY"
+
+    }
     override fun getLayoutId(): Int {
         return R.layout.activity_web_view
     }
@@ -16,6 +22,11 @@ class WebActivity: BaseActivity<ActivityWebViewBinding, WebViewModel>() {
     }
 
     override fun initViewData() {
-        TODO("Not yet implemented")
+        val title = intent.getStringExtra(INTENT_WEB_TITLE_KEY)
+        val url = intent.getStringExtra(INTENT_WEB_URL_KEY)
+
+        viewModel?.webTitle?.set(title)
+
+        binding?.webView?.loadUrl(url ?: "")
     }
 }
